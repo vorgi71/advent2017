@@ -10,13 +10,26 @@ class Day3 {
     val pointList=createSpiral(277678)
     println("endPos = $pointList ${abs(pointList.last().x)+abs(pointList.last().y)}")
     val result2=calculateGeometricFibonacci(pointList,277678)
+    println("result2 = $result2")
   }
 
   private fun calculateGeometricFibonacci( points: List<Point>, maxValue:Int) : Int {
-    var value=1
-    var index=0
-    var pos=points[index]
+    val mutablePoints=points.toMutableList()
+    var sum=0
+    var nextPoint=mutablePoints.removeFirst()
+    val newList:MutableList<Pair<Point,Int>> = mutableListOf(Pair(nextPoint,1))
 
+    while(sum < maxValue) {
+      nextPoint=mutablePoints.removeFirst()
+      val xRange=nextPoint.x-1..nextPoint.x+1
+      val yRange=nextPoint.y-1..nextPoint.y+1
+      val neighbours = newList.filter { xRange.contains(it.first.x) && yRange.contains(it.first.y) }
+      println("nextPoint: $nextPoint neighbours = ${neighbours}")
+      sum=neighbours.sumOf { it.second }
+      newList.add(Pair(nextPoint,sum))
+      println("sum: $sum")
+    }
+    return sum
   }
 
   private fun createSpiral(endIndex: Int) : List<Point> {
