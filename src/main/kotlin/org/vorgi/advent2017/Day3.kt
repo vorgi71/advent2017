@@ -24,7 +24,7 @@ class Day3 {
       val xRange=nextPoint.x-1..nextPoint.x+1
       val yRange=nextPoint.y-1..nextPoint.y+1
       val neighbours = newList.filter { xRange.contains(it.first.x) && yRange.contains(it.first.y) }
-      println("nextPoint: $nextPoint neighbours = ${neighbours}")
+      println("nextPoint: $nextPoint neighbours = $neighbours")
       sum=neighbours.sumOf { it.second }
       newList.add(Pair(nextPoint,sum))
       println("sum: $sum")
@@ -74,10 +74,10 @@ class Day3 {
   }
 
   private fun printPosList(posList: MutableList<Point>) {
-    var minX=posList.minBy { it.x }.x
-    var minY=posList.minBy { it.y }.y
-    var maxX=posList.maxBy { it.x }.x
-    var maxY=posList.maxBy { it.y }.y
+    val minX=posList.minBy { it.x }.x
+    val minY=posList.minBy { it.y }.y
+    val maxX=posList.maxBy { it.x }.x
+    val maxY=posList.maxBy { it.y }.y
 
     for(y in minY..maxY) {
       for(x in minX..maxX) {
