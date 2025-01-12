@@ -34,6 +34,8 @@ class Day7 {
     val input2=Utils.readInput("day7_2")
     val fileNodes2 = parseTree(input2)
     val result2=findRoot(fileNodes2)
+    check(fileNodes2.size==input2.size)
+    check(verifyTree(result2,input2))
     println("result2 = ${result2}")
 
     val result3 = findImbalance(result1)
@@ -41,6 +43,47 @@ class Day7 {
 
     val result4 = findImbalance(result2)
     println("result4 = ${result4}")
+  }
+
+  private fun verifyTree(result: FileNode, input:  List<String>): Boolean {
+    var valid=true
+
+    val line=input.find { it.startsWith("${result.name} ") }
+
+    val weight= line?.let { line.substring(line.indexOf("(")+1, it.indexOf(")")).toInt() }
+
+    if(weight != result.weight) {
+      return false
+    }
+
+    if(line.contains("->")) {
+
+      var children = line.let { line.substring(line.indexOf("-> ")+3, line.length).split(",") }
+      if (children == null) {
+        return false
+      }
+
+      children = children.map { it.trim() }
+      if (result.children.size != children.size) {
+        return false
+      }
+
+      for (child in result.children) {
+        if (!children.contains(child.name)) {
+          return false
+        }
+      }
+    } else {
+      if(result.children.isNotEmpty()) {
+        return false
+      }
+    }
+
+    for(child in result.children) {
+      valid = valid and( verifyTree(child,input))
+    }
+
+    return valid
   }
 
   private fun findImbalance(root: FileNode): Pair<FileNode,Int>? {
@@ -58,20 +101,15 @@ class Day7 {
 
       val oddNodes = currentNode.children.filter { it.calculateWeight() != majorWeight }
 
-      println("oddNode = ${oddNodes} (${oddNodes.size}")
-      if (oddNodes.size > 1) {
-        throw IllegalStateException("more odd found ${oddNodes.size}")
-      }
-      if(oddNodes.size==0) {
-        return Pair(currentNode,diff)
-      }
+      println("oddNode = ${oddNodes.map { it.name }} (${oddNodes.size}")
 
-      val oddNode = oddNodes[0]
-      diff = - (oddNode.calculateWeight() - majorWeight - oddNode.weight)
-      if(oddNode.children.isEmpty()) {
-        return Pair(oddNode,diff)
+      for(oddNode in oddNodes) {
+        diff = -(oddNode.calculateWeight() - majorWeight - oddNode.weight)
+        if (oddNode.children.isEmpty()) {
+          return Pair(oddNode, diff)
+        }
+        stack.add(oddNode)
       }
-      stack.add(oddNode)
     }
     return null
   }
