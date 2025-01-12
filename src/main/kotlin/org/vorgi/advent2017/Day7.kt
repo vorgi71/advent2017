@@ -10,6 +10,18 @@ data class FileNode(val name:String, var weight:Int, var children:List<FileNode>
     }
     return sum
   }
+
+  override fun toString(): String {
+    return buildString {
+      append("name: $name weight: ${weight} overallWeight: ${calculateWeight()} ${children.size}\n")
+      for (child in children) {
+        val childString=child.toString()
+        childString.lines().forEach {
+          append("  $it\n")
+        }
+      }
+    }
+  }
 }
 
 class Day7 {
@@ -68,11 +80,7 @@ class Day7 {
 
     val childNames=list.map { element -> element.children.map { child -> child.name } }.flatten().toSet()
 
-    println("childNames $childNames")
-
     val filteredList=list.filter { !childNames.contains(it.name) }
-
-    println("filteredList: $filteredList ${filteredList.size}" )
 
     return filteredList[0]
   }
@@ -104,10 +112,6 @@ class Day7 {
         newFileNode.weight=weight
         newFileNode.children=childNodes
       }
-    }
-
-    result.values.forEach {
-      println(it)
     }
 
     return result.values.toList()
