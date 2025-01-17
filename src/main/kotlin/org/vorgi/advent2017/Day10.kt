@@ -10,7 +10,7 @@ class Day10 {
 
     check(result2.first[0] * result2.first[1] == 54675)
 
-    var result3 = createHash2(256 ,"1,2,3")
+    var result3 = createHash2(256 ,"34,88,2,222,254,93,150,0,199,255,39,32,137,136,1,167")
     println("result3 = ${result3}")
 
   }
@@ -33,7 +33,6 @@ class Day10 {
       val nextHashAndIS = createHash(currentHash, currentList, currentIndexAndSkipSize)
       currentHash = nextHashAndIS.first.toMutableList()
       currentIndexAndSkipSize = nextHashAndIS.second
-      currentString = currentList.joinToString(", ")
     }
 
 
@@ -49,8 +48,6 @@ class Day10 {
 
     return resultArray.joinToString("") { it.toString(16).padStart(2, '0') }
   }
-
-
 
   private fun createHash(
     size: Int,
