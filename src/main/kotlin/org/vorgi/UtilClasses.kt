@@ -67,6 +67,10 @@ open class CharGrid(input: List<String>) {
     List(height) { "$fillChar".repeat(width) }
   )
 
+  constructor(charGrid: CharGrid) : this(
+    List(charGrid.height) { charGrid.data[it].joinToString("") }
+  )
+
   fun copy(): CharGrid {
     val newLines = data.map { line ->
       buildString {
@@ -143,6 +147,67 @@ open class CharGrid(input: List<String>) {
     }
     return result
   }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as CharGrid
+
+    if (width != other.width) return false
+    if (height != other.height) return false
+    if (data != other.data) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    var result = width
+    result = 31 * result + height
+    result = 31 * result + data.hashCode()
+    return result
+  }
+
+  fun flipHorizontally() :CharGrid {
+    val newGrid=CharGrid(this.width,this.height)
+    for(y in 0..<height) {
+      for(x in 0..<width) {
+        newGrid.setAt(x,y,getAt(x,height-1-y))
+      }
+    }
+    return newGrid
+  }
+  fun flipVertically(): CharGrid {
+    val newGrid=CharGrid(this.width,this.height)
+    for(y in 0..<height) {
+      for(x in 0..<width) {
+        newGrid.setAt(x,y,getAt(width-1-x,y))
+      }
+    }
+    return newGrid
+  }
+
+  // 12 31
+  // 34 42
+  fun rotate90(): CharGrid {
+    val newGrid=CharGrid(this.height,this.width)
+    for(y in 0..<height) {
+      for(x in 0..<width) {
+        newGrid.setAt(x,y,getAt(y,x))
+      }
+    }
+
+    for (x in 0..< newGrid.height) {
+      for (y in 0..<newGrid.width / 2) {
+        val temp = newGrid.getAt(x,y)
+        newGrid.setAt(x,y,newGrid.getAt(x,newGrid.width - 1 - y))
+        newGrid.setAt(x,newGrid.width - 1 - y, temp)
+      }
+    }
+    return newGrid
+  }
+
+
 }
 
 enum class Direction(val dx: Int, val dy: Int) {
@@ -150,5 +215,13 @@ enum class Direction(val dx: Int, val dy: Int) {
 
   operator fun plus(point: Point): Point {
     return Point(this.dx, this.dy) + point
+  }
+
+  fun turnRight(): Direction {
+    return entries[(ordinal + 1) % entries.size]
+  }
+
+  fun turnLeft(): Direction {
+    return entries[(ordinal - 1 + entries.size) % entries.size]
   }
 }

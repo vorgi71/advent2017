@@ -12,6 +12,15 @@ object Utils {
     .readText()
 }
 
+fun <T> List<T>.fullPermutations(): List<List<T>> {
+  if (this.isEmpty()) return listOf(emptyList())
+  return this.flatMap {
+    this.minusElement(it).fullPermutations().map { subPermutation ->
+      listOf(it) + subPermutation
+    }
+  }
+}
+
 fun <T> List<T>.permutations(): List<List<T>> {
   if (this.size == 1) return listOf(this)
   val permutations = mutableListOf<List<T>>()
