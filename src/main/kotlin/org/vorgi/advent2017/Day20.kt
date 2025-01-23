@@ -1,14 +1,12 @@
 package org.example.org.vorgi.advent2017
 
+import org.example.org.vorgi.Point3D
 import org.example.org.vorgi.Utils
+import org.example.org.vorgi.plus
 import kotlin.math.abs
 
-data class Point3D(val x: Long, val y: Long, val z: Long)
 data class Particle(val position: Point3D, val velocity: Point3D, val acceleration: Point3D)
 
-operator fun Point3D.plus(otherPoint:Point3D) : Point3D {
-  return Point3D(this.x+otherPoint.x,this.y+otherPoint.y,this.z+otherPoint.z)
-}
 
 fun parseParticle(line: String): Particle {
   val regex =
@@ -59,7 +57,7 @@ p=< 3,0,0>, v=<-1,0,0>, a=< 0,0,0>""".lines()
       }.toMutableList()
       particles=particles.map { particle: Particle ->
         val newVelocity=particle.velocity + particle.acceleration
-        val newPosition = particle.position+newVelocity
+        val newPosition = particle.position + newVelocity
         Particle(newPosition,newVelocity, particle.acceleration)
       }.toMutableList()
     }

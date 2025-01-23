@@ -225,3 +225,11 @@ enum class Direction(val dx: Int, val dy: Int) {
     return entries[(ordinal - 1 + entries.size) % entries.size]
   }
 }
+
+data class Point3D(val x: Long, val y: Long, val z: Long)
+
+operator fun Point3D.plus(otherPoint:Point3D) : Point3D {
+  return Point3D(this.x+otherPoint.x,this.y+otherPoint.y,this.z+otherPoint.z)
+}
+
+
